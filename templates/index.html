@@ -1,0 +1,195 @@
+
+  <!DOCTYPE html>
+  <html>
+    <head>
+          <title>KeepNote</title>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="../static/css/materialize.min.css"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body>
+
+      <nav class="amber">
+            <div class="container">
+              <a href="#!" class="brand-logo">KeepNote</a>
+              <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+              <ul class="right hide-on-med-and-down">
+                {%if uname%}
+                <li><a href="/logout">logout</a></li>
+                {%else%}
+                <li><a href="/login">login</a></li>
+                {%endif%}
+                
+                
+              </ul>
+            </div>
+          </nav>
+        
+          <ul id="slide-out" class="sidenav">
+            <li><div class="user-view">
+              <div class="background">
+                <img src="https://source.unsplash.com/random">
+              </div>
+              <a href="#user"><img class="circle" src="https://avatars.dicebear.com/v2/avataaars/{{uname}}.svg"></a>
+              <a href="#name"><span class="white-text name">{{uname}}</span></a>
+              <a href="#email"><span class="white-text email">{{uemail}}</span></a>
+            </div></li>
+            
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+
+
+
+<div class="container">
+  <br><br><br>
+  <div class="row">
+    <div class="col s12 m12 l12 center">
+        <img src="https://avatars.dicebear.com/v2/avataaars/{{uname}}.svg" alt="user_image" width="85" height="85">
+        <h3 class="grey-text">{{uname}}</h3>
+        <p class="grey-text" style="font-weight: 400;">Total Notes {{count}}</p>
+    </div>
+  </div>
+      <div class="row">
+            <div class="col s12 m12">
+              <div class="card addnote amber" style="border-radius: 20px;">
+                <div class="card-content white-text">
+                  <h4 class="white-text title" contenteditable="true" style="outline: none;">Title</h4>
+                  <p class="white-text note" contenteditable="true" style="outline: none;">Add Your Note Here.......</p>
+                  <p class="hidden">amber</p>
+                </div>
+                <div class="card-action" style="border-radius: 20px; border: none;">
+                  <a class="btn-floating btn-medium waves-effect waves-light amber add"><i class="material-icons">add</i></a>
+                  <br><br>
+                  <a class="btn-floating btn-medium waves-effect waves-light red changecolor"><i class="material-icons">color_lens</i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+
+<div class="container">
+      <div class="row">
+       
+            {%for i in data%}
+            <div class="col s12 m12">
+              <div class="card {{i.color}}" style="border-radius: 20px;">
+                <div class="card-content white-text">
+                  <h4 class="white-text" contenteditable="true">{{i.title}}</h4>
+                  <p class="white-text" contenteditable="true">{{i.note}}</p>
+                  
+                </div>
+                <div class="card-action" style="border-radius: 20px; border: none;">
+                  <a class="btn-floating btn-medium waves-effect waves-light {{i.color}}" href="/delete/id={{i.id}}"><i class="material-icons">delete</i></a>
+                 
+                </div>
+              </div>
+            </div>
+            {%endfor%}
+          </div>
+</div>
+
+
+{%if count > 3%}
+<footer class="page-footer amber">
+  <div class="container">
+    <div class="row">
+      <div class="col l6 s12">
+        <h5 class="white-text">KeepNote</h5>
+        <!--<p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>-->
+      </div>
+      <div class="col l4 offset-l2 s12">
+        <!--<h5 class="white-text">Links</h5>-->
+        <ul>
+         
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-copyright">
+    <div class="container">
+    © 2020 Copyright KeepNote
+    
+    </div>
+  </div>
+</footer>
+{%endif%}
+
+<!--Modal error-->
+        <!-- Modal Structure -->
+        <div id="error" class="modal">
+          <div class="modal-content">
+            <h4>Error</h4>
+            <p>{{error}}</p>
+          </div>
+          <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+          </div>
+        </div>
+        <script
+        src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+        crossorigin="anonymous"></script>
+      <!--JavaScript at end of body for optimized loading-->
+      <script type="text/javascript" src="../static/js/materialize.min.js"></script>
+      
+      <script>
+          $(document).ready(function() {
+
+
+            //color change of the note
+            let colorBtn = document.querySelector('.changecolor')
+            let colors =['red accent-4','pink accent-4','purple accent-4','deep-purple accent-4',' teal accent-4','lime accent-4','light-green accent-4','blue-grey darken-1']
+            let colorsHex =['#d50000','#ff4081','aa00ff','#6200ea','#00bfa5','#aeea00','#64dd17','#546e7a']
+
+            colorBtn.addEventListener('click',()=>{
+              let random = Math.floor(Math.random()*(0,colors.length-1))
+
+                let notePanel = document.querySelector('.addnote');
+                notePanel.classList.remove('amber');
+                notePanel.style.backgroundColor = colorsHex[random];
+                document.querySelector('.hidden').innerHTML = colors[random];
+                
+
+            });
+
+            $('.sidenav').sidenav();
+            
+   
+   var url="/";
+   let btn = $('.add')
+   btn.on('click',()=>{
+      var title = $('.title').text();
+      var note = $('.note').text();
+      var color = $('.hidden').text();
+      $.ajax({
+            type: "POST",
+            cache: false,
+            data:{title:title,note:note,color:color},
+            url: url,
+            dataType: "json",
+            success: function(data) { 
+                console.log(data); 
+                                 
+            },error:function(error)
+            {
+                  console.log(error);
+            }
+        });
+        location.reload();  
+   })
+});
+if ('{{error}}')
+          {
+            $('#error').modal();
+            $('#error').modal('open');
+}
+      </script>
+      
+    </body>
+  </html>
